@@ -5,7 +5,10 @@
 import "dart:async" show Future, Stream;
 import "dart:convert" show Encoding;
 
-import "resolve.dart";
+import "resolve_none.dart"
+if (dart.library.html) "resolve_html.dart"
+if (dart.library.io) "resolve_io.dart" ;
+
 import "resource_loader.dart";
 
 /// Implementation of [ResourceLoader] that accepts relative and package: URIs.

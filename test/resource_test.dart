@@ -7,7 +7,7 @@
 import "dart:async" show Future, Stream;
 import "dart:convert" show Encoding, ascii;
 import "dart:isolate" show Isolate;
-import "package:resource/resource.dart";
+import "package:resource_portable/resource.dart";
 import "package:test/test.dart";
 
 void main() {
@@ -42,7 +42,7 @@ void main() {
     }
 
     test("load package: URIs", () async {
-      await testLoad(pkguri("resource/bar/baz"));
+      await testLoad(pkguri("resource_portable/bar/baz"));
       await testLoad(pkguri("test/foo/baz"));
     });
     test("load non-pkgUri", () async {

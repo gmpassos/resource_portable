@@ -6,7 +6,7 @@
 
 import "dart:convert";
 
-import "package:resource/resource.dart";
+import "package:resource_portable/resource.dart";
 import "package:test/test.dart";
 
 const content = "Rødgrød med fløde";

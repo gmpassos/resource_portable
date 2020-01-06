@@ -1,4 +1,9 @@
-# Resource
+# Resource (portable)
+
+- Note: This package is a portable (Web compatible) fork from original [resource](https://pub.dev/packages/resource) package.
+- The usage of this package should be the same of original `resource` package, beside import line.
+
+---
 
 Reading data from package contents and files.
 
@@ -9,7 +14,7 @@ The resource URI may be a package: URI.
 Example:
 
 ```dart
-import 'package:resource/resource.dart' show Resource;
+import 'package:resource_portable/resource.dart' show Resource;
 import 'dart:convert' show utf8;
 
 main() async {
@@ -27,4 +32,4 @@ Please check out the [API docs](https://www.dartdocs.org/documentation/resource/
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/dart-lang/resource/issues
+[tracker]: https://github.com/gmpassos/resource_portable/issues

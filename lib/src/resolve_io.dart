@@ -7,13 +7,19 @@ import "dart:isolate" show Isolate;
 
 /// Helper function for resolving to a non-relative, non-package URI.
 Future<Uri> resolveUri(Uri uri) {
+  //print("resolveUri(io)>>>>>>>> $uri") ;
+
   if (uri.scheme == "package") {
     return Isolate.resolvePackageUri(uri).then((resolvedUri) {
       if (resolvedUri == null) {
         throw ArgumentError.value(uri, "uri", "Unknown package");
       }
+
+      //print("resolvedUri>> $resolvedUri") ;
+
       return resolvedUri;
     });
   }
-  return Future<Uri>.value(Uri.base.resolveUri(uri));
+  var resolvedUri = Uri.base.resolveUri(uri);
+  return Future<Uri>.value(resolvedUri);
 }
