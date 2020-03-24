@@ -1,3 +1,6 @@
+## 2.1.7
+- Resource.uriResolved
+
 ## 2.1.6
 - Cast stream to `List<int>` in 'readAsString', this is in preparation for
   `HttpClientResponse` implementing `Stream<Uint8List>` (forward compatible

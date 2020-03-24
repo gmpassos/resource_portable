@@ -1,5 +1,5 @@
 name: resource_portable
-version: 2.1.6
+version: 2.1.7
 description: Reading resource data from (package and other) files (portable fork for Web).
 homepage: https://github.com/gmpassos/resource_portable
 
