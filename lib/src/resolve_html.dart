@@ -2,21 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import "dart:async" show Future;
+import 'dart:async' show Future;
 
 /// Helper function for resolving to a non-relative, non-package URI.
 Future<Uri> resolveUri(Uri uri) {
-  //print("resolveUri(html)>>>>>>>> $uri") ;
-
-  if (uri.scheme == "package") {
-
-    String resolvedPath = "packages/${ uri.path }" ;
+  if (uri.scheme == 'package') {
+    var resolvedPath = 'packages/${uri.path}';
 
     var basePath = Uri.base.path;
 
-    if ( basePath.isNotEmpty ) {
-      if ( !basePath.endsWith("/") ) {
-        int idx = basePath.lastIndexOf('/') ;
+    if (basePath.isNotEmpty) {
+      if (!basePath.endsWith('/')) {
+        var idx = basePath.lastIndexOf('/');
 
         if (idx >= 0) {
           basePath = basePath.substring(0, idx);
@@ -24,24 +21,24 @@ Future<Uri> resolveUri(Uri uri) {
       }
 
       if (basePath.endsWith('/')) {
-        basePath = basePath.substring(0, basePath.length-1) ;
+        basePath = basePath.substring(0, basePath.length - 1);
       }
 
       if (basePath.isNotEmpty) {
-        resolvedPath = "$basePath/packages/${ uri.path }";
+        resolvedPath = '$basePath/packages/${uri.path}';
       }
     }
 
-    Uri resolvedUri = Uri(
+    var resolvedUri = Uri(
       scheme: Uri.base.scheme,
       host: Uri.base.host,
       port: Uri.base.port,
-      path: resolvedPath ,
-    ) ;
+      path: resolvedPath,
+    );
 
     //print("resolvedUri>> $resolvedUri") ;
 
-    return Future.value(resolvedUri) ;
+    return Future.value(resolvedUri);
   }
 
   return Future<Uri>.value(Uri.base.resolveUri(uri));

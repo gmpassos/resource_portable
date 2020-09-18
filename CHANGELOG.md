@@ -1,3 +1,11 @@
+## 2.1.8
+- dartfmt
+- sdk: '>=2.7.0 <3.0.0'
+- typed_data: ^1.2.0
+- test: ^1.15.4
+- pedantic: ^1.9.2
+- CI: vm and firefox tests.
+
 ## 2.1.7
 - Resource.uriResolved
 

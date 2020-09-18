@@ -2,14 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import "dart:async" show Future, Stream;
-import "dart:convert" show Encoding;
+import 'dart:async' show Future, Stream;
+import 'dart:convert' show Encoding;
 
-import "resolve_none.dart"
-if (dart.library.html) "resolve_html.dart"
-if (dart.library.io) "resolve_io.dart" ;
+import 'resolve_none.dart'
+    if (dart.library.html) 'resolve_html.dart'
+    if (dart.library.io) 'resolve_io.dart';
 
-import "resource_loader.dart";
+import 'resource_loader.dart';
 
 /// Base resource implementation.
 class Resource {
@@ -58,13 +58,13 @@ class Resource {
 
   /// Reads the resource content as a stream of bytes.
   Stream<List<int>> openRead() async* {
-    var uri = await uriResolved ;
+    var uri = await uriResolved;
     yield* _loader.openRead(uri);
   }
 
   /// Reads the resource content as a single list of bytes.
   Future<List<int>> readAsBytes() async {
-    var uri = await uriResolved ;
+    var uri = await uriResolved;
     return _loader.readAsBytes(uri);
   }
 
@@ -74,26 +74,23 @@ class Resource {
   /// If no encoding is provided, an encoding is chosen depending on the
   /// protocol and/or available metadata.
   Future<String> readAsString({Encoding encoding}) async {
-    var uri = await uriResolved ;
+    var uri = await uriResolved;
     return _loader.readAsString(uri, encoding: encoding);
   }
 
-  Future<Uri> get uriResolved => _ResolvedURIs.resolveURI(this.uri) ;
-
+  Future<Uri> get uriResolved => _ResolvedURIs.resolveURI(uri);
 }
 
 class _ResolvedURIs {
-
-  static final Map<Uri,Uri> _resolvedURIs = {} ;
+  static final Map<Uri, Uri> _resolvedURIs = {};
 
   static Future<Uri> resolveURI(Uri uri) async {
-    var resolvedURI = _resolvedURIs[uri] ;
-    if (resolvedURI != null) return resolvedURI ;
+    var resolvedURI = _resolvedURIs[uri];
+    if (resolvedURI != null) return resolvedURI;
 
     resolvedURI = await resolveUri(uri);
-    _resolvedURIs[uri] = resolvedURI ;
+    _resolvedURIs[uri] = resolvedURI;
 
-    return resolvedURI ;
+    return resolvedURI;
   }
-
 }

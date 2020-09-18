@@ -5,6 +5,15 @@
 
 ---
 
+[![pub package](https://img.shields.io/pub/v/resource_portable.svg?logo=dart&logoColor=00b9fc)](https://pub.dartlang.org/packages/resource_portable)
+[![CI](https://img.shields.io/github/workflow/status/gmpassos/resource_portable/Dart%20CI/master?logo=github-actions&logoColor=white)](https://github.com/gmpassos/resource_portable/actions)
+[![GitHub Tag](https://img.shields.io/github/v/tag/gmpassos/resource_portable?logo=git&logoColor=white)](https://github.com/gmpassos/resource_portable/releases)
+[![New Commits](https://img.shields.io/github/commits-since/gmpassos/resource_portable/latest?logo=git&logoColor=white)](https://github.com/gmpassos/resource_portable/network)
+[![Last Commits](https://img.shields.io/github/last-commit/gmpassos/resource_portable?logo=git&logoColor=white)](https://github.com/gmpassos/resource_portable/commits/master)
+[![Pull Requests](https://img.shields.io/github/issues-pr/gmpassos/resource_portable?logo=github&logoColor=white)](https://github.com/gmpassos/resource_portable/pulls)
+[![Code size](https://img.shields.io/github/languages/code-size/gmpassos/resource_portable?logo=github&logoColor=white)](https://github.com/gmpassos/resource_portable)
+[![License](https://img.shields.io/github/license/gmpassos/resource_portable?logo=open-source-initiative&logoColor=green)](https://github.com/gmpassos/resource_portable/blob/master/LICENSE)
+
 Reading data from package contents and files.
 
 A resource is data that can be read into a Dart program at runtime.
