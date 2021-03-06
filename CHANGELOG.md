@@ -1,3 +1,11 @@
+## 3.0.0
+
+- Dart 2.12:
+  - Sound null safety compatibility.
+- typed_data: ^1.3.0
+- test: ^1.16.5
+- pedantic: ^1.11.0
+
 ## 2.1.8
 - dartfmt
 - sdk: '>=2.7.0 <3.0.0'

@@ -14,11 +14,11 @@ import 'package:test/test.dart';
 const content = 'Rødgrød med fløde';
 
 void main() {
-  HttpServer server;
-  Uri uri;
+  HttpServer /*?*/ server;
+  /*late*/ Uri uri;
   setUp(() async {
     var addr = (await InternetAddress.lookup('localhost'))[0];
-    server = await HttpServer.bind(addr, 0);
+    server = await HttpServer.bind(addr, 0) /*!*/;
     var port = server.port;
     uri = Uri.parse('http://localhost:$port/default.html');
     unawaited(server.forEach((HttpRequest request) {

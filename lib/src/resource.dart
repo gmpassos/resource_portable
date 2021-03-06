@@ -79,6 +79,11 @@ class Resource {
   }
 
   Future<Uri> get uriResolved => _ResolvedURIs.resolveURI(uri);
+
+  @override
+  String toString() {
+    return 'Resource{uri: $_uri ; loader: $_loader}';
+  }
 }
 
 class _ResolvedURIs {

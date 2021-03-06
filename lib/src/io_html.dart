@@ -35,7 +35,7 @@ Future<List<int>> readAsBytes(Uri uri) async {
 }
 
 /// Reads the bytes of a URI as a string.
-Future<String> readAsString(Uri uri, Encoding encoding) async {
+Future<String> readAsString(Uri uri, Encoding /*?*/ encoding) async {
   if (uri.scheme == 'http' || uri.scheme == 'https') {
     // Fetch as string if the encoding is expected to be understood,
     // otherwise fetch as bytes and do decoding using the encoding.

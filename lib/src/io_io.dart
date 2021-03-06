@@ -59,7 +59,7 @@ Future<List<int>> readAsBytes(Uri uri) async {
 }
 
 /// Read the bytes of a URI as a string.
-Future<String> readAsString(Uri uri, Encoding encoding) async {
+Future<String> readAsString(Uri uri, Encoding /*?*/ encoding) async {
   if (uri.scheme == 'file') {
     encoding ??= utf8;
     return File.fromUri(uri).readAsString(encoding: encoding);
