@@ -32,7 +32,7 @@ jobs:
       - name: dart pub get
         run: su -c 'cd $(< /tmp/test-dir.txt) && dart pub get' tester
       - name: dart format
-        run: su -c 'cd $(< /tmp/test-dir.txt) && dart format -o write --set-exit-if-changed .' tester
+        run: su -c 'cd $(< /tmp/test-dir.txt) && dart format -o none --set-exit-if-changed .' tester
       - name: dart analyze
         run: su -c 'cd $(< /tmp/test-dir.txt) && dart analyze --fatal-infos --fatal-warnings .' tester
       - name: Run VM tests
