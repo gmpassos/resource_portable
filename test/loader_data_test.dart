@@ -14,7 +14,7 @@ const content = 'Rødgrød med fløde';
 void main() {
   void testFile(Encoding encoding, bool base64) {
     group("${encoding.name}${base64 ? " base64" : ""}", () {
-      Uri uri;
+      late Uri uri;
       setUp(() {
         var dataUri =
             UriData.fromString(content, encoding: encoding, base64: base64);

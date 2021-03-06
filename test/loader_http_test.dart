@@ -14,14 +14,14 @@ import 'package:test/test.dart';
 const content = 'Rødgrød med fløde';
 
 void main() {
-  HttpServer /*?*/ server;
-  /*late*/ Uri uri;
+  HttpServer? server;
+  late Uri uri;
   setUp(() async {
     var addr = (await InternetAddress.lookup('localhost'))[0];
-    server = await HttpServer.bind(addr, 0) /*!*/;
-    var port = server.port;
+    server = await HttpServer.bind(addr, 0);
+    var port = server!.port;
     uri = Uri.parse('http://localhost:$port/default.html');
-    unawaited(server.forEach((HttpRequest request) {
+    unawaited(server!.forEach((HttpRequest request) {
       if (request.uri.path.endsWith('.not')) {
         request.response
           ..statusCode = HttpStatus.notFound
@@ -121,12 +121,12 @@ void main() {
   });
 
   tearDown(() {
-    server.close();
+    server!.close();
     server = null;
   });
 }
 
-Encoding parseAcceptCharset(List<String> headers) {
+Encoding parseAcceptCharset(List<String>? headers) {
   Encoding encoding = latin1;
   if (headers != null) {
     var weight = 0.0;
@@ -137,7 +137,7 @@ Encoding parseAcceptCharset(List<String> headers) {
         if (e == null) continue;
         var w = 1.0;
         if (match[2] != null) {
-          w = double.parse(match[2]);
+          w = double.parse(match[2]!);
         }
         if (w > weight) {
           weight = w;

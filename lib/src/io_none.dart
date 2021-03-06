@@ -8,7 +8,7 @@ import 'dart:convert' show Encoding;
 /// Read the bytes of a URI as a stream of bytes.
 Stream<List<int>> readAsStream(Uri uri) async* {
   if (uri.scheme == 'data') {
-    yield uri.data.contentAsBytes();
+    yield uri.data!.contentAsBytes();
     return;
   }
   throw UnsupportedError('Unsupported scheme: $uri');
@@ -17,15 +17,15 @@ Stream<List<int>> readAsStream(Uri uri) async* {
 /// Read the bytes of a URI as a list of bytes.
 Future<List<int>> readAsBytes(Uri uri) async {
   if (uri.scheme == 'data') {
-    return uri.data.contentAsBytes();
+    return uri.data!.contentAsBytes();
   }
   throw UnsupportedError('Unsupported scheme: $uri');
 }
 
 /// Read the bytes of a URI as a string.
-Future<String> readAsString(Uri uri, Encoding /*?*/ encoding) async {
+Future<String> readAsString(Uri uri, Encoding? encoding) async {
   if (uri.scheme == 'data') {
-    return uri.data.contentAsString(encoding: encoding);
+    return uri.data!.contentAsString(encoding: encoding);
   }
   throw UnsupportedError('Unsupported scheme: $uri');
 }

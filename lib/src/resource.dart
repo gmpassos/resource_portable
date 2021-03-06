@@ -45,7 +45,7 @@ class Resource {
   /// If [loader] is omitted, a default implementation is used which supports
   /// as many of `http`, `https`, `file` and `data` as are available on the
   /// current platform.
-  const Resource(uri, {ResourceLoader loader})
+  const Resource(uri, {ResourceLoader? loader})
       : _uri = uri,
         _loader = loader ?? const DefaultLoader();
 
@@ -73,7 +73,7 @@ class Resource {
   /// The content is decoded into a string using an [Encoding].
   /// If no encoding is provided, an encoding is chosen depending on the
   /// protocol and/or available metadata.
-  Future<String> readAsString({Encoding encoding}) async {
+  Future<String> readAsString({Encoding? encoding}) async {
     var uri = await uriResolved;
     return _loader.readAsString(uri, encoding: encoding);
   }

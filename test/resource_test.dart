@@ -13,7 +13,7 @@ import 'package:test/test.dart';
 void main() {
   Uri pkguri(path) => Uri(scheme: 'package', path: path);
 
-  Future<Uri> resolve(Uri source) async {
+  Future<Uri?> resolve(Uri source) async {
     if (source.scheme == 'package') {
       return Isolate.resolvePackageUri(source);
     }
@@ -74,7 +74,7 @@ class LogLoader implements ResourceLoader {
   }
 
   @override
-  Future<String> readAsString(Uri uri, {Encoding encoding}) async {
+  Future<String> readAsString(Uri uri, {Encoding? encoding}) async {
     requests.add(['String', uri, encoding]);
     return '\x00\x00\x00';
   }

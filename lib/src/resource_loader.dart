@@ -48,7 +48,7 @@ abstract class ResourceLoader {
   /// is used, if available and recognized by [Encoding.getByName],
   /// otherwise it defaults to Latin-1 for `http` and `https`
   /// and to ASCII for `data` URIs.
-  Future<String> readAsString(Uri uri, {Encoding encoding});
+  Future<String> readAsString(Uri uri, {Encoding? encoding});
 }
 
 /// Default implementation of [ResourceLoader].
@@ -68,6 +68,6 @@ class DefaultLoader implements ResourceLoader {
   Future<List<int>> readAsBytes(Uri uri) => io.readAsBytes(uri);
 
   @override
-  Future<String> readAsString(Uri uri, {Encoding encoding}) =>
+  Future<String> readAsString(Uri uri, {Encoding? encoding}) =>
       io.readAsString(uri, encoding);
 }

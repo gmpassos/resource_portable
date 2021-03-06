@@ -13,15 +13,15 @@ import 'package:test/test.dart';
 const content = 'Rødgrød med fløde';
 
 void main() {
-  Directory dir;
+  late Directory dir;
   var dirCounter = 0;
   setUp(() {
     dir = Directory.systemTemp.createTempSync('testdir${dirCounter++}');
   });
   void testFile(Encoding encoding) {
     group('${encoding.name}', () {
-      File file;
-      Uri uri;
+      late File file;
+      late Uri uri;
       setUp(() {
         var dirUri = dir.uri;
         uri = dirUri.resolve('file.txt');

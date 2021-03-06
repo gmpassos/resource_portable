@@ -29,7 +29,7 @@ jobs:
           rm -rf .dart_tool .packages pubspec.lock
           chown -R tester:tester .
           ls -al
-      - name: Pub Get
+      - name: dart pub get
         run: su -c 'cd $(< /tmp/test-dir.txt) && dart pub get' tester
       - name: dart format
         run: su -c 'cd $(< /tmp/test-dir.txt) && dart format -o write --set-exit-if-changed .' tester
@@ -39,5 +39,5 @@ jobs:
         run: su -c 'DISPLAY=:0 cd $(< /tmp/test-dir.txt) && dart run test -p vm' tester
       - name: Run Browser tests (Firefox)
         run: su -c 'DISPLAY=:0 cd $(< /tmp/test-dir.txt) && dart run test -p firefox' tester
-      - name: publish --dry-run
-        run: su -c 'DISPLAY=:0 cd $(< /tmp/test-dir.txt) && dart pub publish --dry-run' tester
+      #- name: dart publish --dry-run
+      #  run: su -c 'DISPLAY=:0 cd $(< /tmp/test-dir.txt) && dart pub publish --dry-run' tester

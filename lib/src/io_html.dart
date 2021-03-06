@@ -17,7 +17,7 @@ Stream<List<int>> readAsStream(Uri uri) async* {
     return;
   }
   if (uri.scheme == 'data') {
-    yield uri.data.contentAsBytes();
+    yield uri.data!.contentAsBytes();
     return;
   }
   throw UnsupportedError('Unsupported scheme: $uri');
@@ -29,13 +29,13 @@ Future<List<int>> readAsBytes(Uri uri) async {
     return _httpGetBytes(uri);
   }
   if (uri.scheme == 'data') {
-    return uri.data.contentAsBytes();
+    return uri.data!.contentAsBytes();
   }
   throw UnsupportedError('Unsupported scheme: $uri');
 }
 
 /// Reads the bytes of a URI as a string.
-Future<String> readAsString(Uri uri, Encoding /*?*/ encoding) async {
+Future<String> readAsString(Uri uri, Encoding? encoding) async {
   if (uri.scheme == 'http' || uri.scheme == 'https') {
     // Fetch as string if the encoding is expected to be understood,
     // otherwise fetch as bytes and do decoding using the encoding.
@@ -45,7 +45,7 @@ Future<String> readAsString(Uri uri, Encoding /*?*/ encoding) async {
     return HttpRequest.getString(uri.toString());
   }
   if (uri.scheme == 'data') {
-    return uri.data.contentAsString(encoding: encoding);
+    return uri.data!.contentAsString(encoding: encoding);
   }
   throw UnsupportedError('Unsupported scheme: $uri');
 }
