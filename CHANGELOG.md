@@ -1,7 +1,8 @@
 ## 3.0.0
 
-- Dart 2.12:
+- Dart 2.12.0:
   - Sound null safety compatibility.
+  - Update CI dart commands.
 - typed_data: ^1.3.0
 - test: ^1.16.5
 - pedantic: ^1.11.0
