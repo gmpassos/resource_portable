@@ -39,5 +39,5 @@ jobs:
         run: su -c 'DISPLAY=:0 cd $(< /tmp/test-dir.txt) && dart test -p vm' tester
       - name: Run Browser tests (Firefox)
         run: su -c 'DISPLAY=:0 cd $(< /tmp/test-dir.txt) && dart test -p firefox' tester
-      #- name: dart publish --dry-run
+      #- name: dart pub publish --dry-run
       #  run: su -c 'DISPLAY=:0 cd $(< /tmp/test-dir.txt) && dart pub publish --dry-run' tester
