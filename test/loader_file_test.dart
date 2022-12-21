@@ -19,7 +19,7 @@ void main() {
     dir = Directory.systemTemp.createTempSync('testdir${dirCounter++}');
   });
   void testFile(Encoding encoding) {
-    group('${encoding.name}', () {
+    group(encoding.name, () {
       late File file;
       late Uri uri;
       setUp(() {

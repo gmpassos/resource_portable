@@ -36,8 +36,6 @@ Future<Uri> resolveUri(Uri uri) {
       path: resolvedPath,
     );
 
-    //print("resolvedUri>> $resolvedUri") ;
-
     return Future.value(resolvedUri);
   }
 

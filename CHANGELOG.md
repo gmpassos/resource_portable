@@ -1,3 +1,12 @@
+## 3.0.1
+
+- Added `example/resource_portable_example.dart`.
+- Improved Dart CI.
+- typed_data: ^1.3.1
+- test: ^1.22.1
+- lints: ^2.0.1
+- dependency_validator: ^3.2.2
+
 ## 3.0.0
 
 - Dart 2.12.0:

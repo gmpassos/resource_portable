@@ -4,10 +4,10 @@
 
 @TestOn('vm')
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:pedantic/pedantic.dart';
 import 'package:resource_portable/resource.dart';
 import 'package:test/test.dart';
 
