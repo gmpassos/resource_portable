@@ -1,3 +1,10 @@
+## 3.0.2
+
+- `resolve_io.dart`:
+  - `resolveUri`: allow working dir path resolution (useful for compiled/native execution).
+- collection: ^1.17.0
+- path: ^1.8.3
+
 ## 3.0.1
 
 - Added `example/resource_portable_example.dart`.
