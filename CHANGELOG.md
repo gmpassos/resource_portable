@@ -1,6 +1,7 @@
 ## 3.0.3
 
 - Fix path resolution on Windows.
+- sdk: '>=2.15.0 <3.0.0'
 
 ## 3.0.2
 
