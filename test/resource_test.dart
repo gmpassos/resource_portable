@@ -9,6 +9,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'package:resource_portable/resource.dart';
 import 'package:resource_portable/src/resolve_io.dart' as resolver;
+import 'package:resource_portable/src/resource_loader.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -90,9 +91,10 @@ class LogLoader implements ResourceLoader {
   }
 
   @override
-  Future<Uri> resolveUri(Uri uri) {
-    return resolveTestUri(uri);
-  }
+  Uri parseUri(String s) => ResourceURIResolver.defaultParseUri(s);
+
+  @override
+  Future<Uri> resolveUri(Uri uri) => resolveTestUri(uri);
 }
 
 Future<Uri> resolveTestUri(Uri source) async {

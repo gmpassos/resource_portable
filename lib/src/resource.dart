@@ -52,7 +52,18 @@ class Resource {
   /// This is a [Uri] of the `uri` parameter given to the constructor.
   /// If the parameter was a string that did not contain a valid URI,
   /// reading `uri` will fail.
-  Uri get uri => (_uri is String) ? Uri.parse(_uri) : (_uri as Uri);
+  Uri get uri => _normalizeUri();
+
+  Uri _normalizeUri() {
+    var uri = _uri;
+    if (uri == null) {
+      return Uri.base;
+    } else if (uri is Uri) {
+      return uri;
+    } else {
+      return _loader.parseUri(uri.toString());
+    }
+  }
 
   /// Reads the resource content as a stream of bytes.
   Stream<List<int>> openRead() async* {

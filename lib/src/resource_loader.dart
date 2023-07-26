@@ -5,6 +5,8 @@
 import 'dart:async' show Future, Stream;
 import 'dart:convert' show Encoding;
 
+import 'package:path/path.dart' as pack_path;
+
 import 'io_none.dart'
     if (dart.library.html) 'io_html.dart'
     if (dart.library.io) 'io_io.dart' as io;
@@ -18,10 +20,45 @@ import 'resolve_none.dart'
 class ResourceURIResolver {
   static final ResourceURIResolver defaultResolver = ResourceURIResolver();
 
+  /// The [Uri] parsers.
+  /// - Default: [defaultParseUri]
+  final Uri Function(String s) uriParser;
+
   /// The implementation of the [uri] resolver.
   final Future<Uri> Function(Uri uri) uriResolver;
 
-  ResourceURIResolver({this.uriResolver = uri_resolver.resolveUri});
+  ResourceURIResolver({
+    this.uriParser = defaultParseUri,
+    this.uriResolver = uri_resolver.resolveUri,
+  });
+
+  /// Parses [s] to [Uri].
+  /// - See [parseUriCached].
+  Uri parseUri(String s) => uriParser(s);
+
+  final Map<String, Uri> _parseUriCache = {};
+
+  /// Parses [s] to [Uri] and caches the result.
+  /// - Calls [parseUri].
+  Uri parseUriCached(String s) => _parseUriCache[s] ??= parseUri(s);
+
+  /// Clears the cache for [parseUriCached].
+  void clearParseUriCache() {
+    _parseUriCache.clear();
+  }
+
+  /// The amount of cached entries from [parseUriCached].
+  int get parseUriCacheSize => _parseUriCache.length;
+
+  static Uri defaultParseUri(String s) {
+    Uri uri;
+    if (!s.startsWith('package:')) {
+      uri = pack_path.toUri(s);
+    } else {
+      uri = Uri.parse(s);
+    }
+    return uri;
+  }
 
   /// Resolves [uri] WITHOUT caching the result.
   /// - Calls [uriResolver].
@@ -42,13 +79,19 @@ class ResourceURIResolver {
     return resolvedURI;
   }
 
-  /// Clears the internal cache.
-  void clearCache() {
+  /// Clears the cache for [resolveUriCached].
+  void clearResolveUriCache() {
     _resolveCache.clear();
   }
 
-  /// The amount of entries in the cache.
-  int get cacheSize => _resolveCache.length;
+  /// The amount of cached entries from [resolveUriCached].
+  int get resolveUriCacheSize => _resolveCache.length;
+
+  /// Clears all caches.
+  void clearCache() {
+    clearResolveUriCache();
+    clearParseUriCache();
+  }
 }
 
 /// Resource loading strategy.
@@ -72,6 +115,9 @@ abstract class ResourceLoader {
   /// This loader is automatically used by the `Resource` class
   /// if no other loader is specified.
   static ResourceLoader get defaultLoader => const PackageLoader();
+
+  /// Parses [s] to [Uri].
+  Uri parseUri(String s);
 
   /// Resolved [uri] to the actual [Uri] to load.
   Future<Uri> resolveUri(Uri uri);
@@ -109,6 +155,15 @@ class DefaultLoader implements ResourceLoader {
   final ResourceURIResolver? uriResolver;
 
   const DefaultLoader({this.uriResolver});
+
+  @override
+  Uri parseUri(String s) {
+    final uriResolver = this.uriResolver;
+    if (uriResolver != null) {
+      return uriResolver.parseUri(s);
+    }
+    return ResourceURIResolver.defaultParseUri(s);
+  }
 
   @override
   Future<Uri> resolveUri(Uri uri) {

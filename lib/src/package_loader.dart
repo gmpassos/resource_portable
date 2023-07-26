@@ -25,6 +25,12 @@ class PackageLoader implements ResourceLoader {
       : _loader = loader ?? const DefaultLoader();
 
   @override
+  Uri parseUri(String s) {
+    var uriResolver = this.uriResolver ?? ResourceURIResolver.defaultResolver;
+    return uriResolver.parseUri(s);
+  }
+
+  @override
   Future<Uri> resolveUri(Uri uri) {
     var uriResolver = this.uriResolver ?? ResourceURIResolver.defaultResolver;
     return uriResolver.resolveUriCached(uri);
