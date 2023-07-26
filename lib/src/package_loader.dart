@@ -27,7 +27,7 @@ class PackageLoader implements ResourceLoader {
   @override
   Future<Uri> resolveUri(Uri uri) {
     var uriResolver = this.uriResolver ?? ResourceURIResolver.defaultResolver;
-    return uriResolver.resolveUri(uri);
+    return uriResolver.resolveUriCached(uri);
   }
 
   @override

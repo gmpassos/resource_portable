@@ -114,7 +114,7 @@ class DefaultLoader implements ResourceLoader {
   Future<Uri> resolveUri(Uri uri) {
     final uriResolver = this.uriResolver;
     if (uriResolver != null) {
-      return uriResolver.resolveUri(uri);
+      return uriResolver.resolveUriCached(uri);
     }
     return Future.value(uri);
   }
