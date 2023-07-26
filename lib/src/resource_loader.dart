@@ -5,10 +5,94 @@
 import 'dart:async' show Future, Stream;
 import 'dart:convert' show Encoding;
 
+import 'package:path/path.dart' as pack_path;
+
 import 'io_none.dart'
     if (dart.library.html) 'io_html.dart'
     if (dart.library.io) 'io_io.dart' as io;
 import 'package_loader.dart';
+import 'resolve_none.dart'
+    if (dart.library.html) 'resolve_html.dart'
+    if (dart.library.io) 'resolve_io.dart' as uri_resolver;
+
+/// A [Resource] [Uri] resolver with an internal cache.
+/// - The default [uriResolver] can resolve package files.
+class ResourceURIResolver {
+  static final ResourceURIResolver defaultResolver = ResourceURIResolver();
+
+  /// The [Uri] parsers.
+  /// - Default: [defaultParseUri]
+  final Uri Function(String s) uriParser;
+
+  /// The implementation of the [uri] resolver.
+  final Future<Uri> Function(Uri uri) uriResolver;
+
+  ResourceURIResolver({
+    this.uriParser = defaultParseUri,
+    this.uriResolver = uri_resolver.resolveUri,
+  });
+
+  /// Parses [s] to [Uri].
+  /// - See [parseUriCached].
+  Uri parseUri(String s) => uriParser(s);
+
+  final Map<String, Uri> _parseUriCache = {};
+
+  /// Parses [s] to [Uri] and caches the result.
+  /// - Calls [parseUri].
+  Uri parseUriCached(String s) => _parseUriCache[s] ??= parseUri(s);
+
+  /// Clears the cache for [parseUriCached].
+  void clearParseUriCache() {
+    _parseUriCache.clear();
+  }
+
+  /// The amount of cached entries from [parseUriCached].
+  int get parseUriCacheSize => _parseUriCache.length;
+
+  static Uri defaultParseUri(String s) {
+    Uri uri;
+    if (!s.startsWith('package:')) {
+      uri = pack_path.toUri(s);
+    } else {
+      uri = Uri.parse(s);
+    }
+    return uri;
+  }
+
+  /// Resolves [uri] WITHOUT caching the result.
+  /// - Calls [uriResolver].
+  /// - See [resolveUriCached].
+  Future<Uri> resolveUri(Uri uri) => uriResolver(uri);
+
+  final Map<Uri, Uri> _resolveCache = {};
+
+  /// Resolves [uri] and caches the result.
+  /// - Calls [resolveUri].
+  Future<Uri> resolveUriCached(Uri uri) async {
+    var resolvedURI = _resolveCache[uri];
+    if (resolvedURI != null) return resolvedURI;
+
+    resolvedURI = await resolveUri(uri);
+    _resolveCache[uri] = resolvedURI;
+
+    return resolvedURI;
+  }
+
+  /// Clears the cache for [resolveUriCached].
+  void clearResolveUriCache() {
+    _resolveCache.clear();
+  }
+
+  /// The amount of cached entries from [resolveUriCached].
+  int get resolveUriCacheSize => _resolveCache.length;
+
+  /// Clears all caches.
+  void clearCache() {
+    clearResolveUriCache();
+    clearParseUriCache();
+  }
+}
 
 /// Resource loading strategy.
 ///
@@ -30,8 +114,13 @@ abstract class ResourceLoader {
   ///
   /// This loader is automatically used by the `Resource` class
   /// if no other loader is specified.
-  static ResourceLoader get defaultLoader =>
-      const PackageLoader(DefaultLoader());
+  static ResourceLoader get defaultLoader => const PackageLoader();
+
+  /// Parses [s] to [Uri].
+  Uri parseUri(String s);
+
+  /// Resolved [uri] to the actual [Uri] to load.
+  Future<Uri> resolveUri(Uri uri);
 
   /// Reads the file located by [uri] as a stream of bytes.
   Stream<List<int>> openRead(Uri uri);
@@ -58,16 +147,43 @@ abstract class ResourceLoader {
 ///
 /// Supports as many of `http:`, `https:`, `file:` and `data:` URIs as
 /// possible.
+///
+/// [resolveUri] won't resolve package files.
 class DefaultLoader implements ResourceLoader {
-  const DefaultLoader();
+  /// The [Uri] resolver, used by [resolveUri].
+  /// - If not defined the [Uri] won't be changed/resolved.
+  final ResourceURIResolver? uriResolver;
+
+  const DefaultLoader({this.uriResolver});
 
   @override
-  Stream<List<int>> openRead(Uri uri) => io.readAsStream(uri);
+  Uri parseUri(String s) {
+    final uriResolver = this.uriResolver;
+    if (uriResolver != null) {
+      return uriResolver.parseUri(s);
+    }
+    return ResourceURIResolver.defaultParseUri(s);
+  }
 
   @override
-  Future<List<int>> readAsBytes(Uri uri) => io.readAsBytes(uri);
+  Future<Uri> resolveUri(Uri uri) {
+    final uriResolver = this.uriResolver;
+    if (uriResolver != null) {
+      return uriResolver.resolveUriCached(uri);
+    }
+    return Future.value(uri);
+  }
 
   @override
-  Future<String> readAsString(Uri uri, {Encoding? encoding}) =>
-      io.readAsString(uri, encoding);
+  Stream<List<int>> openRead(Uri uri) async* {
+    yield* io.readAsStream(await resolveUri(uri));
+  }
+
+  @override
+  Future<List<int>> readAsBytes(Uri uri) async =>
+      io.readAsBytes(await resolveUri(uri));
+
+  @override
+  Future<String> readAsString(Uri uri, {Encoding? encoding}) async =>
+      io.readAsString(await resolveUri(uri), encoding);
 }

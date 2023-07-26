@@ -5,9 +5,7 @@
 import 'dart:async' show Future, Stream;
 import 'dart:convert' show Encoding;
 
-import 'resolve_none.dart'
-    if (dart.library.html) 'resolve_html.dart'
-    if (dart.library.io) 'resolve_io.dart';
+import 'package:resource_portable/src/package_loader.dart';
 
 import 'resource_loader.dart';
 
@@ -47,14 +45,25 @@ class Resource {
   /// current platform.
   const Resource(uri, {ResourceLoader? loader})
       : _uri = uri,
-        _loader = loader ?? const DefaultLoader();
+        _loader = loader ?? const PackageLoader();
 
   /// The location URI of this resource.
   ///
   /// This is a [Uri] of the `uri` parameter given to the constructor.
   /// If the parameter was a string that did not contain a valid URI,
   /// reading `uri` will fail.
-  Uri get uri => (_uri is String) ? Uri.parse(_uri) : (_uri as Uri);
+  Uri get uri => _normalizeUri();
+
+  Uri _normalizeUri() {
+    var uri = _uri;
+    if (uri == null) {
+      return Uri.base;
+    } else if (uri is Uri) {
+      return uri;
+    } else {
+      return _loader.parseUri(uri.toString());
+    }
+  }
 
   /// Reads the resource content as a stream of bytes.
   Stream<List<int>> openRead() async* {
@@ -78,24 +87,10 @@ class Resource {
     return _loader.readAsString(uri, encoding: encoding);
   }
 
-  Future<Uri> get uriResolved => _ResolvedURIs.resolveURI(uri);
+  Future<Uri> get uriResolved => _loader.resolveUri(uri);
 
   @override
   String toString() {
     return 'Resource{uri: $_uri ; loader: $_loader}';
-  }
-}
-
-class _ResolvedURIs {
-  static final Map<Uri, Uri> _resolvedURIs = {};
-
-  static Future<Uri> resolveURI(Uri uri) async {
-    var resolvedURI = _resolvedURIs[uri];
-    if (resolvedURI != null) return resolvedURI;
-
-    resolvedURI = await resolveUri(uri);
-    _resolvedURIs[uri] = resolvedURI;
-
-    return resolvedURI;
   }
 }
