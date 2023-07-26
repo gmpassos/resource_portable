@@ -1,7 +1,24 @@
-## 3.0.3
+## 3.1.0
 
-- Fix path resolution on Windows.
-- sdk: '>=2.15.0 <3.0.0'
+- `ResourceLoader`:
+  - Added method `resolveUri`.
+- `Resource.uriResolved` now respects `ResourceLoader` (calls `_loader.resolveUri`).
+- `PackageLoader`:
+  - All constructor parameters are named parameters now.
+    - `loader` is optional.
+- `resolve_io.dart`
+  - Fix path resolution on Windows.
+  - Also checks for package files in the entry point directory (script or executable directory).
+- `dart_test.yaml`
+  - Added `exe` compiler to tests:
+    - `compilers: [source, exe]`
+- `resource_test.dart`:
+  - Added test with existent file, to check a real URI resolution in VM (source and exe compilers).
+
+- sdk: '>=2.18.0 <4.0.0'
+- collection: ^1.17.1
+- typed_data: ^1.3.2
+- test: ^1.24.3
 
 ## 3.0.2
 

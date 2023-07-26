@@ -29,9 +29,25 @@ Future<Uri> resolveUri(Uri uri) {
           if (path2 != path) ...prefixes.map((p) => '$p$path2'),
         ];
 
-        var fileResolved = possiblePaths
-            .map((p) => File(p))
-            .firstWhereOrNull((f) => f.existsSync());
+        var possibleFiles = possiblePaths.map((p) => File(p)).toList();
+
+        var fileResolved =
+            possibleFiles.firstWhereOrNull((f) => f.existsSync());
+
+        if (fileResolved == null) {
+          var entryPointDir = _entryPointDirectory();
+          var currentDir = Directory.current;
+
+          var possibleFiles = [
+            if (entryPointDir != null)
+              ...possiblePaths
+                  .map((p) => File(pack_path.join(entryPointDir.path, p))),
+            ...possiblePaths
+                .map((p) => File(pack_path.join(currentDir.path, p))),
+          ];
+
+          fileResolved = possibleFiles.firstWhereOrNull((f) => f.existsSync());
+        }
 
         if (fileResolved != null) {
           resolvedUri = fileResolved.absolute.uri;
@@ -45,6 +61,44 @@ Future<Uri> resolveUri(Uri uri) {
       return resolvedUri;
     });
   }
+
   var resolvedUri = Uri.base.resolveUri(uri);
   return Future<Uri>.value(resolvedUri);
+}
+
+/// Returns the [Platform.script] or [Platform.resolvedExecutable] (if compiled).
+Directory? _entryPointDirectory() {
+  var script = Platform.script;
+  var executable = Platform.resolvedExecutable;
+
+  var scriptFile = _absoluteFile(script.toFilePath());
+  var executableFile = _absoluteFile(executable);
+
+  if (scriptFile == null && executableFile == null) {
+    return null;
+  } else if (scriptFile == null) {
+    return executableFile!.parent;
+  } else if (executableFile == null) {
+    return scriptFile.parent;
+  } else {
+    var scriptDir = scriptFile.parent;
+    var executableDir = executableFile.parent;
+
+    if (executableDir.path == scriptDir.path) {
+      return executableDir;
+    } else {
+      return scriptDir;
+    }
+  }
+}
+
+File? _absoluteFile(String filePath) {
+  try {
+    var file = File(filePath).absolute;
+    if (file.existsSync()) {
+      return file;
+    }
+  } catch (_) {}
+
+  return null;
 }

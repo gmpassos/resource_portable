@@ -5,9 +5,7 @@
 import 'dart:async' show Future, Stream;
 import 'dart:convert' show Encoding;
 
-import 'resolve_none.dart'
-    if (dart.library.html) 'resolve_html.dart'
-    if (dart.library.io) 'resolve_io.dart';
+import 'package:resource_portable/src/package_loader.dart';
 
 import 'resource_loader.dart';
 
@@ -47,7 +45,7 @@ class Resource {
   /// current platform.
   const Resource(uri, {ResourceLoader? loader})
       : _uri = uri,
-        _loader = loader ?? const DefaultLoader();
+        _loader = loader ?? const PackageLoader();
 
   /// The location URI of this resource.
   ///
@@ -78,24 +76,10 @@ class Resource {
     return _loader.readAsString(uri, encoding: encoding);
   }
 
-  Future<Uri> get uriResolved => _ResolvedURIs.resolveURI(uri);
+  Future<Uri> get uriResolved => _loader.resolveUri(uri);
 
   @override
   String toString() {
     return 'Resource{uri: $_uri ; loader: $_loader}';
-  }
-}
-
-class _ResolvedURIs {
-  static final Map<Uri, Uri> _resolvedURIs = {};
-
-  static Future<Uri> resolveURI(Uri uri) async {
-    var resolvedURI = _resolvedURIs[uri];
-    if (resolvedURI != null) return resolvedURI;
-
-    resolvedURI = await resolveUri(uri);
-    _resolvedURIs[uri] = resolvedURI;
-
-    return resolvedURI;
   }
 }

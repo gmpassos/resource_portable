@@ -5,10 +5,6 @@
 import 'dart:async' show Future, Stream;
 import 'dart:convert' show Encoding;
 
-import 'resolve_none.dart'
-    if (dart.library.html) 'resolve_html.dart'
-    if (dart.library.io) 'resolve_io.dart';
-
 import 'resource_loader.dart';
 
 /// Implementation of [ResourceLoader] that accepts relative and package: URIs.
@@ -20,7 +16,19 @@ import 'resource_loader.dart';
 /// object, and just want to load a package resource directly.
 class PackageLoader implements ResourceLoader {
   final ResourceLoader _loader;
-  const PackageLoader(ResourceLoader loader) : _loader = loader;
+
+  /// The [Uri] resolver, used by [resolveUri].
+  /// - If not defined will use [ResourceURIResolver.defaultResolver].
+  final ResourceURIResolver? uriResolver;
+
+  const PackageLoader({ResourceLoader? loader, this.uriResolver})
+      : _loader = loader ?? const DefaultLoader();
+
+  @override
+  Future<Uri> resolveUri(Uri uri) {
+    var uriResolver = this.uriResolver ?? ResourceURIResolver.defaultResolver;
+    return uriResolver.resolveUri(uri);
+  }
 
   @override
   Stream<List<int>> openRead(Uri uri) async* {

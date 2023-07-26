@@ -18,3 +18,5 @@ define_platforms:
         linux: firefox-esr
 
 platforms: [vm, chrome]
+
+compilers: [source, exe]
