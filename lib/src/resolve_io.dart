@@ -20,7 +20,9 @@ Future<Uri> resolveUri(Uri uri) {
 
         var path2 = pack_path.joinAll(pathParts2);
 
-        const prefixes = ['packages/', 'lib/', ''];
+        var pathSeparator = pack_path.separator;
+
+        var prefixes = ['packages$pathSeparator', 'lib$pathSeparator', ''];
 
         var possiblePaths = [
           ...prefixes.map((p) => '$p$path'),

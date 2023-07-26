@@ -1,5 +1,5 @@
 name: resource_portable
-version: 3.0.2
+version: 3.0.3
 description: Reading resource data from files in a portable way (VM, Web, Flutter and native).
 homepage: https://github.com/gmpassos/resource_portable
 

@@ -1,3 +1,7 @@
+## 3.0.3
+
+- Fix path resolution on Windows.
+
 ## 3.0.2
 
 - `resolve_io.dart`:
