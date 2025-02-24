@@ -3,17 +3,16 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async' show Future, Stream;
-import 'dart:convert' show Encoding;
-// ignore: deprecated_member_use
-import 'dart:html';
-import 'dart:typed_data' show ByteBuffer;
+import 'dart:convert' show Encoding, utf8;
+
+import 'package:http/http.dart' as http;
 
 /// Reads the bytes of a URI as a stream of bytes.
 Stream<List<int>> readAsStream(Uri uri) async* {
   // TODO(lrn): Should file be run through XmlHTTPRequest too?
   if (uri.scheme == 'http' || uri.scheme == 'https') {
     // TODO: Stream in chunks if DOM has a way to do so.
-    var response = await _httpGetBytes(uri);
+    var response = await http.readBytes(uri);
     yield response;
     return;
   }
@@ -27,7 +26,7 @@ Stream<List<int>> readAsStream(Uri uri) async* {
 /// Reads the bytes of a URI as a list of bytes.
 Future<List<int>> readAsBytes(Uri uri) async {
   if (uri.scheme == 'http' || uri.scheme == 'https') {
-    return _httpGetBytes(uri);
+    return http.readBytes(uri);
   }
   if (uri.scheme == 'data') {
     return uri.data!.contentAsBytes();
@@ -41,20 +40,13 @@ Future<String> readAsString(Uri uri, Encoding? encoding) async {
     // Fetch as string if the encoding is expected to be understood,
     // otherwise fetch as bytes and do decoding using the encoding.
     if (encoding != null) {
-      return encoding.decode(await _httpGetBytes(uri));
+      return encoding.decode(await http.readBytes(uri));
     }
-    return HttpRequest.getString(uri.toString());
+
+    return utf8.decode(await http.readBytes(uri));
   }
   if (uri.scheme == 'data') {
     return uri.data!.contentAsString(encoding: encoding);
   }
   throw UnsupportedError('Unsupported scheme: $uri');
-}
-
-Future<List<int>> _httpGetBytes(Uri uri) {
-  return HttpRequest.request(uri.toString(), responseType: 'arraybuffer')
-      .then((request) {
-    ByteBuffer data = request.response;
-    return data.asUint8List();
-  });
 }

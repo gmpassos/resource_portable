@@ -8,12 +8,12 @@ import 'dart:convert' show Encoding;
 import 'package:path/path.dart' as pack_path;
 
 import 'io_none.dart'
-    if (dart.library.html) 'io_html.dart'
-    if (dart.library.io) 'io_io.dart' as io;
+    if (dart.library.io) 'io_io.dart'
+    if (dart.library.js_interop) 'io_web.dart' as io;
 import 'package_loader.dart';
 import 'resolve_none.dart'
-    if (dart.library.html) 'resolve_html.dart'
-    if (dart.library.io) 'resolve_io.dart' as uri_resolver;
+    if (dart.library.io) 'resolve_io.dart'
+    if (dart.library.js_interop) 'resolve_web.dart' as uri_resolver;
 
 /// A [Resource] [Uri] resolver with an internal cache.
 /// - The default [uriResolver] can resolve package files.
