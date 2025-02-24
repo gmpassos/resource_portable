@@ -1,3 +1,10 @@
+## 3.1.2
+
+- Renamed `io_html.dart` to `io_web.dart`.
+  - Remove use of `dart:html` (deprecated) and use package `http`.
+
+- http: ^1.3.0
+
 ## 3.1.1
 
 - sdk: '>=3.5.0 <4.0.0'
