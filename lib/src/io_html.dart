@@ -4,6 +4,7 @@
 
 import 'dart:async' show Future, Stream;
 import 'dart:convert' show Encoding;
+// ignore: deprecated_member_use
 import 'dart:html';
 import 'dart:typed_data' show ByteBuffer;
 
