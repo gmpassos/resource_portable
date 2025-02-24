@@ -1,3 +1,3 @@
-library resource_portable;
+library;
 
 export 'resource.dart';

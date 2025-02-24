@@ -19,7 +19,7 @@
 ///     var obj = await resource.openRead()   // Reads as stream of bytes.
 ///                             .transform(utf8.fuse(JSON).decoder)
 ///                             .first;
-library resource;
+library;
 
 export 'src/resource.dart' show Resource;
 export 'src/resource_loader.dart' show ResourceLoader;

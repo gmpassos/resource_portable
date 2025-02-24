@@ -1,3 +1,15 @@
+## 3.1.1
+
+- sdk: '>=3.5.0 <4.0.0'
+
+- collection: ^1.18.0
+- path: ^1.9.1
+- typed_data: ^1.4.0
+
+- test: ^1.25.15
+- lints: ^5.0.0
+- dependency_validator: ^3.2.3
+
 ## 3.1.0
 
 - `ResourceLoader`:
