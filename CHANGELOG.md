@@ -1,3 +1,12 @@
+## 3.1.4
+
+- collection: ^1.19.1
+- http: ^1.6.0
+
+- test: ^1.29.0
+- lints: ^5.1.1
+- dependency_validator: ^5.0.4
+
 ## 3.1.3
 
 - `resolveUri` (`dart:io`): if `Isolate.resolvePackageUri` throws an `UnsupportedError` (e.g. on Flutter apps),
