@@ -9,9 +9,32 @@ import 'package:path/path.dart' as pack_path;
 import 'package:collection/collection.dart';
 
 /// Helper function for resolving to a non-relative, non-package URI.
-Future<Uri> resolveUri(Uri uri) {
+Future<Uri> resolveUri(Uri uri) =>
+    resolveUriWith(uri, Isolate.resolvePackageUri);
+
+/// Same as [resolveUri], resolving `package:` URIs with [packageUriResolver]
+/// (normally [Isolate.resolvePackageUri]).
+///
+/// If [packageUriResolver] throws an [UnsupportedError] (e.g. on Flutter apps,
+/// where `Isolate.resolvePackageUri` isn't supported), it falls back to a file
+/// search, like when it returns `null`. If no file is found, it throws an
+/// [UnsupportedError] explaining that `package:` URIs can't be resolved on the
+/// current platform.
+Future<Uri> resolveUriWith(
+    Uri uri, Future<Uri?> Function(Uri uri) packageUriResolver) {
   if (uri.scheme == 'package') {
-    return Isolate.resolvePackageUri(uri).then((resolvedUri) {
+    UnsupportedError? unsupportedError;
+
+    Future<Uri?> resolvePackageUri() async {
+      try {
+        return await packageUriResolver(uri);
+      } on UnsupportedError catch (e) {
+        unsupportedError = e;
+        return null;
+      }
+    }
+
+    return resolvePackageUri().then((resolvedUri) {
       if (resolvedUri == null) {
         var path = uri.path;
         var pathParts = pack_path.split(uri.path);
@@ -55,6 +78,14 @@ Future<Uri> resolveUri(Uri uri) {
       }
 
       if (resolvedUri == null) {
+        if (unsupportedError != null) {
+          throw UnsupportedError(
+              "Can't resolve the package URI `$uri`: `package:` URIs can't be "
+              'resolved on this platform (e.g. Flutter apps). Bundle the '
+              'resource as an asset or embed it in the Dart code. '
+              '(${unsupportedError!.message})');
+        }
+
         throw ArgumentError.value(uri.toString(), 'uri', 'Unknown package URI');
       }
 

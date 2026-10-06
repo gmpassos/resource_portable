@@ -65,6 +65,47 @@ void main() {
       await testLoad(Uri.parse('unknown:/something'));
     });
   });
+
+  group('resolveUriWith', () {
+    // Simulates Flutter, where `Isolate.resolvePackageUri` isn't supported:
+    Future<Uri?> unsupported(Uri uri) =>
+        throw UnsupportedError('Isolate.resolvePackageUriSync');
+
+    Future<Uri?> unsupportedAsync(Uri uri) async =>
+        throw UnsupportedError('Isolate.resolvePackageUriSync');
+
+    Future<Uri?> notFound(Uri uri) async => null;
+
+    test('UnsupportedError: falls back to a file search', () async {
+      for (var packageUriResolver in [unsupported, unsupportedAsync]) {
+        var resolved = await resolver.resolveUriWith(
+            pkguri('resource_portable/resource/file-sample.txt'),
+            packageUriResolver);
+
+        expect(resolved.scheme, equals('file'));
+        expect(File(resolved.toFilePath()).readAsStringSync(),
+            contains('file sample'));
+      }
+    });
+
+    test('UnsupportedError: no file found', () async {
+      for (var packageUriResolver in [unsupported, unsupportedAsync]) {
+        await expectLater(
+            resolver.resolveUriWith(
+                pkguri('resource_portable/no-such-file.txt'),
+                packageUriResolver),
+            throwsA(isA<UnsupportedError>().having((e) => e.message, 'message',
+                contains("can't be resolved on this platform"))));
+      }
+    });
+
+    test('unknown package URI', () async {
+      await expectLater(
+          resolver.resolveUriWith(
+              pkguri('resource_portable/no-such-file.txt'), notFound),
+          throwsArgumentError);
+    });
+  });
 }
 
 class LogLoader implements ResourceLoader {
