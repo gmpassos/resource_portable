@@ -1,3 +1,10 @@
+## 3.1.3
+
+- `resolveUri` (`dart:io`): if `Isolate.resolvePackageUri` throws an `UnsupportedError` (e.g. on Flutter apps),
+  falls back to the file search (as when it returns `null`). If no file is found, throws an `UnsupportedError`
+  explaining that `package:` URIs can't be resolved on the current platform.
+  - New `resolveUriWith` (with a custom `package:` URI resolver).
+
 ## 3.1.2
 
 - Renamed `io_html.dart` to `io_web.dart`.
